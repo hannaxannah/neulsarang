@@ -7,7 +7,7 @@ import {
 export const users = pgTable('users', {
   id:           uuid('id').defaultRandom().primaryKey(),
   name:         varchar('name', { length: 100 }).notNull(),
-  email:        varchar('email', { length: 255 }).notNull().unique(),
+  username:     varchar('username', { length: 100 }).notNull().unique(),
   passwordHash: varchar('password_hash', { length: 255 }).notNull(),
   role:         varchar('role', { length: 20 }).notNull().default('shepherd'), // admin | pastor | shepherd
   cellGroupId:  uuid('cell_group_id'),

@@ -9,34 +9,46 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: '이메일', type: 'email' },
+        username: { label: '아이디', type: 'text' },
         password: { label: '비밀번호', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        try {
+          if (!credentials?.username || !credentials?.password) return null
 
-        const [user] = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, credentials.email as string))
-          .limit(1)
+          const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.username, credentials.username as string))
+            .limit(1)
 
-        if (!user || !user.isActive) return null
+          if (!user || !user.isActive) return null
 
-        const valid = await bcrypt.compare(credentials.password as string, user.passwordHash)
-        if (!valid) return null
+          const valid = await bcrypt.compare(credentials.password as string, user.passwordHash)
+          if (!valid) return null
 
-        return { id: user.id, name: user.name, email: user.email, role: user.role }
+          return { id: user.id, name: user.name, email: user.username, role: user.role }
+        } catch (e) {
+          console.error('[auth] authorize error:', e)
+          return null
+        }
       },
     }),
   ],
   callbacks: {
     jwt({ token, user }) {
-      if (user) token.role = (user as { role: string }).role
+      if (user) {
+        token.role = (user as { role: string }).role
+        // email 필드에 username 값이 담겨 있음 (NextAuth 호환성)
+        token.username = token.email ?? ''
+      }
       return token
     },
     session({ session, token }) {
-      if (session.user) session.user.role = token.role as string
+      if (session.user) {
+        session.user.role = token.role as string
+        session.user.username = token.username as string
+      }
       return session
     },
   },

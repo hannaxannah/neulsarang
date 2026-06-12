@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,11 +15,15 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    if (/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(username)) {
+      setError('아이디는 한글을 사용할 수 없습니다.')
+      return
+    }
     setLoading(true)
-    const result = await signIn('credentials', { email, password, redirect: false })
+    const result = await signIn('credentials', { username, password, redirect: false })
     setLoading(false)
     if (result?.error) {
-      setError('이메일 또는 비밀번호가 올바르지 않습니다.')
+      setError('아이디 또는 비밀번호가 올바르지 않습니다.')
     } else {
       router.push('/dashboard')
     }
@@ -78,14 +82,14 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>
-                이메일
+                아이디
               </label>
               <input
                 className="login-input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="이메일을 입력하세요"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="아이디를 입력하세요"
                 required
                 style={{
                   border: '1px solid rgba(0,0,0,0.12)',
