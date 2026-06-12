@@ -34,7 +34,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--cream)' }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold" style={{ color: 'var(--navy)', fontFamily: 'var(--font-serif)' }}>
+          <h1 className="text-2xl font-bold" style={{ color: 'var(--navy)', fontFamily: 'var(--font-sans)' }}>
             늘사랑교회
           </h1>
           <p className="text-sm mt-1" style={{ color: '#64748b' }}>관리자 시스템</p>

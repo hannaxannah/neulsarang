@@ -5,7 +5,7 @@ export default function Location() {
         <div className="location-grid">
           <div className="location-info">
             <span className="section-tag">오시는 길</span>
-            <h2 className="section-title" style={{ fontFamily: 'var(--font-serif)' }}>
+            <h2 className="section-title" style={{ fontFamily: 'var(--font-sans)' }}>
               늘사랑교회로<br />오세요
             </h2>
             <div className="info-list">

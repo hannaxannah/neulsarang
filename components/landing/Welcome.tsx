@@ -14,7 +14,7 @@ export default function Welcome() {
         <div className="welcome-grid">
           <div className="welcome-text">
             <span className="section-tag">교회소개</span>
-            <h2 className="section-title" style={{ fontFamily: 'var(--font-serif)' }}>
+            <h2 className="section-title" style={{ fontFamily: 'var(--font-sans)' }}>
               하나님의 사랑을<br />나누는 교회
             </h2>
             <p className="section-body">

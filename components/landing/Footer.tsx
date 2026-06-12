@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <p className="footer-logo" style={{ fontFamily: 'var(--font-serif)' }}>늘사랑교회</p>
+            <p className="footer-logo" style={{ fontFamily: 'var(--font-sans)' }}>늘사랑교회</p>
             <p className="footer-tagline">언제나, 변함없이, 사랑으로</p>
           </div>
           <nav className="footer-links">

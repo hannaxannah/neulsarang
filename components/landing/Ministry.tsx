@@ -69,7 +69,7 @@ export default function Ministry() {
       <div className="container">
         <div className="section-header">
           <span className="section-tag">사역</span>
-          <h2 className="section-title" style={{ fontFamily: 'var(--font-serif)' }}>모든 세대가 함께</h2>
+          <h2 className="section-title" style={{ fontFamily: 'var(--font-sans)' }}>모든 세대가 함께</h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--muted)', marginBottom: '3.5rem' }}>
             각 세대에 맞는 사역으로 믿음 안에서 함께 성장합니다
           </p>

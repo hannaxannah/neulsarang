@@ -18,7 +18,7 @@ export default function Navbar() {
   return (
     <header className={`nav${scrolled ? ' scrolled' : ''}`} id="nav">
       <div className="nav-inner">
-        <Link href="/" className="nav-logo" style={{ fontFamily: 'var(--font-serif)' }}>
+        <Link href="/" className="nav-logo" style={{ fontFamily: 'var(--font-sans)' }}>
           늘사랑교회
         </Link>
         <nav className="nav-links">

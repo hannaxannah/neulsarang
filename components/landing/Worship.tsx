@@ -16,14 +16,14 @@ export default function Worship() {
       <div className="container">
         <div className="section-header">
           <span className="section-tag light">예배안내</span>
-          <h2 className="section-title light" style={{ fontFamily: 'var(--font-serif)' }}>함께 예배합니다</h2>
+          <h2 className="section-title light" style={{ fontFamily: 'var(--font-sans)' }}>함께 예배합니다</h2>
           <p className="section-desc">늘사랑교회의 모든 예배에 여러분을 초대합니다</p>
         </div>
         <div className="worship-grid">
           {services.map((s) => (
             <div key={s.title} className={`worship-card${s.featured ? ' featured' : ''}`}>
               <div className="worship-day">{s.day}</div>
-              <h3 style={{ fontFamily: 'var(--font-serif)' }}>{s.title}</h3>
+              <h3 style={{ fontFamily: 'var(--font-sans)' }}>{s.title}</h3>
               <div className="worship-times">
                 {s.times.map((t) => (
                   <div key={t.label} className="time-row">

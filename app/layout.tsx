@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_KR, Noto_Serif_KR } from 'next/font/google'
+import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
 
 const notoSans = Noto_Sans_KR({
@@ -9,12 +9,6 @@ const notoSans = Noto_Sans_KR({
   display: 'swap',
 })
 
-const notoSerif = Noto_Serif_KR({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
-  variable: '--font-serif',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: '늘사랑교회',
@@ -29,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${notoSans.variable} ${notoSerif.variable}`}>
+    <html lang="ko" className={notoSans.variable}>
       <body style={{ fontFamily: 'var(--font-sans)' }}>{children}</body>
     </html>
   )
