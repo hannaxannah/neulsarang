@@ -27,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const valid = await bcrypt.compare(credentials.password as string, user.passwordHash)
           if (!valid) return null
 
-          return { id: user.id, name: user.name, email: user.username, role: user.role }
+          return { id: user.id, name: user.name, email: user.username, role: user.role, cellGroupId: user.cellGroupId ?? null }
         } catch (e) {
           console.error('[auth] authorize error:', e)
           return null
@@ -39,8 +39,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.role = (user as { role: string }).role
-        // email 필드에 username 값이 담겨 있음 (NextAuth 호환성)
         token.username = token.email ?? ''
+        token.cellGroupId = (user as { cellGroupId: string | null }).cellGroupId
       }
       return token
     },
@@ -48,6 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.role = token.role as string
         session.user.username = token.username as string
+        session.user.cellGroupId = token.cellGroupId as string | null
       }
       return session
     },
