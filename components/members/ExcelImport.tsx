@@ -67,8 +67,9 @@ export default function ExcelImport() {
         <span style={{
           display: 'inline-block', padding: '7px 12px', borderRadius: 8,
           fontSize: 12, fontWeight: 500,
-          background: loading ? '#F2F2F7' : '#1D1D1F',
-          color: loading ? '#86868B' : '#FFFFFF',
+          background: '#F2F2F7',
+          color: loading ? '#86868B' : 'var(--color-text-secondary)',
+          border: '1px solid rgba(0,0,0,0.08)',
           cursor: loading ? 'default' : 'pointer',
         }}>
           {loading ? '처리 중…' : '엑셀 업로드'}

@@ -27,7 +27,7 @@ export default function MemberTable({ members, cellGroups }: { members: Member[]
 
   return (
     <>
-      <div style={{ background: '#FFFFFF', borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+      <div className="members-table-scroll" style={{ background: '#FFFFFF', borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>

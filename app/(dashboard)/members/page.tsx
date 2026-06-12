@@ -18,7 +18,7 @@ export default async function MembersPage({
 
   return (
     <PageContainer>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+      <div className="members-header-row" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 600, color: '#1D1D1F', margin: '0 0 6px', letterSpacing: '-0.3px' }}>
             성도 관리

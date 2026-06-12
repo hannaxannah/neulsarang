@@ -48,7 +48,7 @@ export default function MembersHeader({ cellGroups }: { cellGroups: CellGroup[] 
             type="submit"
             style={{
               padding: '7px 16px', borderRadius: 8, fontSize: 13, fontWeight: 500,
-              background: '#1D1D1F', color: '#FFFFFF', border: 'none', cursor: 'pointer',
+              background: 'var(--color-text)', color: '#FFFFFF', border: 'none', cursor: 'pointer',
             }}
           >
             검색
@@ -70,7 +70,7 @@ export default function MembersHeader({ cellGroups }: { cellGroups: CellGroup[] 
           onClick={() => setShowForm(true)}
           style={{
             padding: '7px 16px', borderRadius: 8, fontSize: 13, fontWeight: 500,
-            background: '#C9A84C', color: '#FFFFFF', border: 'none', cursor: 'pointer',
+            background: 'var(--color-primary)', color: '#FFFFFF', border: 'none', cursor: 'pointer',
             whiteSpace: 'nowrap',
           }}
         >
