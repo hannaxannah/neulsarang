@@ -1,18 +1,13 @@
 import { auth } from '@/auth'
 import { NextResponse } from 'next/server'
 
-const PUBLIC_PATHS = ['/', '/login']
-
 export default auth((req) => {
   const { pathname } = req.nextUrl
-  const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith('/api/auth'))
+  const isApi = pathname.startsWith('/api/auth')
 
-  if (!req.auth && !isPublic) {
+  // /dashboard/** 는 인증 필수
+  if (!req.auth && pathname.startsWith('/dashboard') && !isApi) {
     return NextResponse.redirect(new URL('/login', req.url))
-  }
-
-  if (req.auth && pathname === '/login') {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
   return NextResponse.next()
