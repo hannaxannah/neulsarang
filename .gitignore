@@ -1,0 +1,10 @@
+.vercel
+.history
+
+# document
+/document
+
+node_modules
+.env*
+.next
+tsconfig.tsbuildinfo
