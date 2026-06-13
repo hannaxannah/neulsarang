@@ -81,13 +81,22 @@ export default function ServicesClient({ services }: { services: ServiceRow[] })
                 <th style={th}>예배명</th>
                 <th style={th}>요일</th>
                 <th style={th}>시간</th>
-                <th style={th}>상태</th>
-                <th style={{ ...th, textAlign: 'right' }}></th>
+                <th style={th} className="col-mobile-hide">상태</th>
+                <th style={{ ...th, textAlign: 'right' }} className="col-mobile-hide"></th>
               </tr>
             </thead>
             <tbody>
               {services.map((s, i) => (
-                <tr key={s.id} style={{ borderBottom: i < services.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                <tr
+                  key={s.id}
+                  onClick={() => setEditTarget(s)}
+                  style={{
+                    borderBottom: i < services.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#F9F9F9')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '')}
+                >
                   <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 500, color: '#1D1D1F' }}>
                     {s.name}
                   </td>
@@ -97,7 +106,7 @@ export default function ServicesClient({ services }: { services: ServiceRow[] })
                   <td style={{ padding: '12px 16px', fontSize: 13, color: '#3A3A3C' }}>
                     {s.time ?? '-'}
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
+                  <td style={{ padding: '12px 16px' }} className="col-mobile-hide" onClick={e => e.stopPropagation()}>
                     <button
                       onClick={() => handleToggle(s)}
                       disabled={togglingId === s.id}
@@ -111,7 +120,7 @@ export default function ServicesClient({ services }: { services: ServiceRow[] })
                       {togglingId === s.id ? '…' : s.isActive ? '활성' : '비활성'}
                     </button>
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
+                  <td style={{ padding: '12px 16px' }} className="col-mobile-hide" onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
                       <button onClick={() => setEditTarget(s)} style={btnGray}>수정</button>
                       <button onClick={() => { setPendingDelete(s); setDeleteError('') }} style={btnDanger}>삭제</button>

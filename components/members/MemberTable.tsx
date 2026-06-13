@@ -74,13 +74,13 @@ export default function MemberTable({
               <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                 <th style={thSort} onClick={() => handleSort('name')}>이름{getSortIcon('name')}</th>
                 <th style={thBase}>성별</th>
-                <th style={thBase}>생년월일</th>
+                <th style={thBase} className="col-mobile-hide">생년월일</th>
                 <th style={thSort} onClick={() => handleSort('cellGroup')}>목장{getSortIcon('cellGroup')}</th>
-                <th style={thBase}>연락처</th>
-                <th style={thSort} onClick={() => handleSort('registeredAt')}>등록일{getSortIcon('registeredAt')}</th>
+                <th style={thBase} className="col-mobile-hide">연락처</th>
+                <th style={thSort} onClick={() => handleSort('registeredAt')} className="col-mobile-hide">등록일{getSortIcon('registeredAt')}</th>
                 <th style={thBase}>상태</th>
-                <th style={thBase}>세례</th>
-                <th style={thBase} />
+                <th style={thBase} className="col-mobile-hide">세례</th>
+                <th style={thBase} className="col-mobile-hide" />
               </tr>
             </thead>
             <tbody>
@@ -107,14 +107,14 @@ export default function MemberTable({
                     <td style={{ padding: '11px 16px', color: '#3A3A3C' }}>
                       {m.gender === 'male' ? '남' : m.gender === 'female' ? '여' : '–'}
                     </td>
-                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }} className="col-mobile-hide">
                       {formatDate(m.birthDate)}
                     </td>
                     <td style={{ padding: '11px 16px', color: '#3A3A3C' }}>{m.cellGroupName ?? '–'}</td>
-                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }} className="col-mobile-hide">
                       {m.phone ?? '–'}
                     </td>
-                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }} className="col-mobile-hide">
                       {formatDate(m.registeredAt)}
                     </td>
                     <td style={{ padding: '11px 16px' }}>
@@ -125,12 +125,12 @@ export default function MemberTable({
                         color: s.color, background: s.bg,
                       }}>{s.label}</span>
                     </td>
-                    <td style={{ padding: '11px 16px', color: m.isBaptized ? '#1C8754' : '#C7C7CC' }}>
+                    <td style={{ padding: '11px 16px', color: m.isBaptized ? '#1C8754' : '#C7C7CC' }} className="col-mobile-hide">
                       {m.isBaptized
                         ? <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                         : '–'}
                     </td>
-                    <td style={{ padding: '11px 16px' }} onClick={e => e.stopPropagation()}>
+                    <td style={{ padding: '11px 16px' }} className="col-mobile-hide" onClick={e => e.stopPropagation()}>
                       <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
                         <button
                           onClick={() => { setEditTarget(m); setShowForm(true) }}

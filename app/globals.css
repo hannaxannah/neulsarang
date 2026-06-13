@@ -71,6 +71,17 @@ body {
   .members-table-scroll { overflow-x: auto; }
 }
 
+/* ─── Form grid 2-col (collapses to 1-col on mobile) ─── */
+.form-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) {
+  .form-grid-2col { grid-template-columns: 1fr; }
+}
+
+/* ─── Table columns: desktop-only ─── */
+@media (max-width: 768px) {
+  .col-mobile-hide { display: none !important; }
+}
+
 /* ─── Utility ─── */
 .scroll-hide { scrollbar-width: none; }
 .scroll-hide::-webkit-scrollbar { display: none; }

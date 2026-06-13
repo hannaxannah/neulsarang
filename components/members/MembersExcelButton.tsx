@@ -70,7 +70,7 @@ export default function MembersExcelButton() {
 
   return (
     <>
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{ display: 'flex', gap: 8 }} className="col-mobile-hide">
         <button
           onClick={handleDownload}
           disabled={downloading}

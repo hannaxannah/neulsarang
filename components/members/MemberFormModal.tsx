@@ -89,7 +89,7 @@ export default function MemberFormModal({
         <form onSubmit={handleSubmit} style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
 
           {/* 이름 + 성별 */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="form-grid-2col">
             <div style={fieldStyle}>
               <label style={labelStyle}>이름 *</label>
               <input name="name" required defaultValue={member?.name} style={inputStyle} placeholder="홍길동" />
@@ -105,7 +105,7 @@ export default function MemberFormModal({
           </div>
 
           {/* 생년월일 + 연락처 */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="form-grid-2col">
             <div style={fieldStyle}>
               <label style={labelStyle}>생년월일</label>
               <input name="birthDate" type="date" defaultValue={member?.birthDate ?? ''} style={inputStyle} />
@@ -117,7 +117,7 @@ export default function MemberFormModal({
           </div>
 
           {/* 이메일 + 등록일 */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="form-grid-2col">
             <div style={fieldStyle}>
               <label style={labelStyle}>이메일</label>
               <input name="email" type="email" defaultValue={member?.email ?? ''} style={inputStyle} placeholder="example@email.com" />
@@ -129,7 +129,7 @@ export default function MemberFormModal({
           </div>
 
           {/* 목장 + 상태 */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="form-grid-2col">
             <div style={fieldStyle}>
               <label style={labelStyle}>목장</label>
               <select name="cellGroupId" defaultValue={member?.cellGroupId ?? ''} style={inputStyle}>
