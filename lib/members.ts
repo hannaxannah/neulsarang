@@ -14,11 +14,14 @@ export async function getMembers(search?: string) {
       birthDate: members.birthDate,
       phone: members.phone,
       email: members.email,
+      address: members.address,
       status: members.status,
       isBaptized: members.isBaptized,
+      baptizedAt: members.baptizedAt,
       cellGroupId: members.cellGroupId,
       cellGroupName: cellGroups.name,
       registeredAt: members.registeredAt,
+      notes: members.notes,
     })
     .from(members)
     .leftJoin(cellGroups, eq(members.cellGroupId, cellGroups.id))
