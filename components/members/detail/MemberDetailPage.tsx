@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import type { MemberRow, CellGroupRow, getFamilyMembers, getMemberRelations } from '@/lib/members'
 import BasicInfoTab from './BasicInfoTab'
 import FamilyTab from './FamilyTab'
+import PageHeader from '@/components/dashboard/PageHeader'
 
 type FamilyMember = Awaited<ReturnType<typeof getFamilyMembers>>[number]
 type MemberRelation = Awaited<ReturnType<typeof getMemberRelations>>[number]
@@ -40,28 +41,17 @@ export default function MemberDetailPage({
 
   return (
     <div style={{ padding: '0 0 40px' }}>
-      {/* 헤더 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-        <button
-          onClick={() => router.push('/members')}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 4,
-            background: 'none', border: 'none', cursor: 'pointer',
-            color: '#86868B', fontSize: 13, padding: '4px 0',
-          }}
-        >
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-          </svg>
-          성도 관리
-        </button>
-        <span style={{ color: '#D1D1D6', fontSize: 13 }}>/</span>
-        <span style={{ fontSize: 13, color: '#1D1D1F', fontWeight: 500 }}>{member.name}</span>
-        <span style={{
-          padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 500,
-          color: status.color, background: status.bg,
-        }}>{status.label}</span>
-      </div>
+      <PageHeader
+        backHref="/members"
+        backLabel="성도 관리"
+        title={member.name}
+        titleSuffix={
+          <span style={{
+            padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 500,
+            color: status.color, background: status.bg,
+          }}>{status.label}</span>
+        }
+      />
 
       {/* 탭 */}
       <div style={{
