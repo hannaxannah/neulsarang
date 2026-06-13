@@ -14,6 +14,7 @@ export default function Mockup() {
 
       {/* Headline */}
       <div
+        className="land-2"
         style={{
           padding:
             "clamp(4px, 1vw, 8px) var(--landing-px) clamp(48px, 7vw, 88px)",
@@ -36,7 +37,7 @@ export default function Mockup() {
       </div>
 
       {/* Mockup section — sage green bg behind tablet */}
-      <div style={{ position: "relative", marginBottom: 0 }}>
+      <div className="land-3" style={{ position: "relative", marginBottom: 0 }}>
         {/* Sage green background */}
         <div
           style={{
