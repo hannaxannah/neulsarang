@@ -25,17 +25,17 @@ export default function MemberFormModal({
     const fd = new FormData(e.currentTarget)
     const data = {
       name: fd.get('name') as string,
-      gender: fd.get('gender') as string || undefined,
-      birthDate: fd.get('birthDate') as string || undefined,
-      phone: fd.get('phone') as string || undefined,
-      email: fd.get('email') as string || undefined,
-      address: fd.get('address') as string || undefined,
-      registeredAt: fd.get('registeredAt') as string || undefined,
+      gender: (fd.get('gender') as string) || undefined,
+      birthDate: (fd.get('birthDate') as string) || undefined,
+      phone: (fd.get('phone') as string) || undefined,
+      email: (fd.get('email') as string) || undefined,
+      address: (fd.get('address') as string) || undefined,
+      registeredAt: (fd.get('registeredAt') as string) || undefined,
       isBaptized: fd.get('isBaptized') === 'on',
-      baptizedAt: fd.get('baptizedAt') as string || undefined,
-      cellGroupId: fd.get('cellGroupId') as string || undefined,
-      status: fd.get('status') as string || 'active',
-      notes: fd.get('notes') as string || undefined,
+      baptizedAt: (fd.get('baptizedAt') as string) || undefined,
+      cellGroupId: (fd.get('cellGroupId') as string) || undefined,
+      status: (fd.get('status') as string) || 'active',
+      notes: (fd.get('notes') as string) || undefined,
     }
     if (isEdit) {
       await updateMember(member!.id, data)
@@ -46,61 +46,102 @@ export default function MemberFormModal({
     onClose()
   }
 
-  const inputCls = 'border rounded-lg px-3 py-1.5 text-sm w-full outline-none focus:ring-1'
-  const inputStyle = { borderColor: '#e2e8f0' }
-  const labelCls = 'text-xs font-medium mb-0.5 block'
-  const labelStyle = { color: '#64748b' }
+  const inputStyle: React.CSSProperties = {
+    width: '100%', boxSizing: 'border-box',
+    border: '1px solid rgba(0,0,0,0.12)', borderRadius: 8,
+    padding: '8px 12px', fontSize: 13, color: '#1D1D1F',
+    background: '#fff', outline: 'none',
+  }
+  const labelStyle: React.CSSProperties = {
+    fontSize: 12, fontWeight: 500, color: '#3A3A3C',
+    marginBottom: 4, display: 'block',
+  }
+  const fieldStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column' }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)' }}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: '#f1f5f9' }}>
-          <h2 className="font-bold" style={{ color: 'var(--navy)' }}>{isEdit ? '성도 수정' : '성도 등록'}</h2>
-          <button onClick={onClose} className="text-xl leading-none" style={{ color: '#94a3b8' }}>✕</button>
+    <div style={{
+      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      zIndex: 1000, padding: '16px',
+    }}>
+      <div style={{
+        background: '#fff', borderRadius: 16, width: '100%', maxWidth: 520,
+        maxHeight: '90vh', overflowY: 'auto',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.15)',
+      }}>
+        {/* Header */}
+        <div style={{
+          padding: '20px 24px 16px', display: 'flex',
+          alignItems: 'center', justifyContent: 'space-between',
+          borderBottom: '1px solid rgba(0,0,0,0.06)', position: 'sticky', top: 0,
+          background: '#fff', zIndex: 1,
+        }}>
+          <h2 style={{ fontSize: 16, fontWeight: 600, color: '#1D1D1F', margin: 0 }}>
+            {isEdit ? '성도 수정' : '성도 등록'}
+          </h2>
+          <button onClick={onClose} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: '#AEAEB2', fontSize: 18, lineHeight: 1, padding: 4,
+          }}>✕</button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-3">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={labelCls} style={labelStyle}>이름 *</label>
-              <input name="name" required defaultValue={member?.name} className={inputCls} style={inputStyle} />
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+          {/* 이름 + 성별 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={fieldStyle}>
+              <label style={labelStyle}>이름 *</label>
+              <input name="name" required defaultValue={member?.name} style={inputStyle} placeholder="홍길동" />
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>성별</label>
-              <select name="gender" defaultValue={member?.gender ?? ''} className={inputCls} style={inputStyle}>
+            <div style={fieldStyle}>
+              <label style={labelStyle}>성별</label>
+              <select name="gender" defaultValue={member?.gender ?? ''} style={inputStyle}>
                 <option value="">선택</option>
                 <option value="male">남</option>
                 <option value="female">여</option>
               </select>
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>생년월일</label>
-              <input name="birthDate" type="date" defaultValue={member?.birthDate ?? ''} className={inputCls} style={inputStyle} />
+          </div>
+
+          {/* 생년월일 + 연락처 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={fieldStyle}>
+              <label style={labelStyle}>생년월일</label>
+              <input name="birthDate" type="date" defaultValue={member?.birthDate ?? ''} style={inputStyle} />
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>연락처</label>
-              <input name="phone" defaultValue={member?.phone ?? ''} className={inputCls} style={inputStyle} />
+            <div style={fieldStyle}>
+              <label style={labelStyle}>연락처</label>
+              <input name="phone" defaultValue={member?.phone ?? ''} style={inputStyle} placeholder="010-0000-0000" />
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>이메일</label>
-              <input name="email" type="email" defaultValue={member?.email ?? ''} className={inputCls} style={inputStyle} />
+          </div>
+
+          {/* 이메일 + 등록일 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={fieldStyle}>
+              <label style={labelStyle}>이메일</label>
+              <input name="email" type="email" defaultValue={member?.email ?? ''} style={inputStyle} placeholder="example@email.com" />
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>등록일</label>
-              <input name="registeredAt" type="date" defaultValue={member?.registeredAt ?? ''} className={inputCls} style={inputStyle} />
+            <div style={fieldStyle}>
+              <label style={labelStyle}>등록일</label>
+              <input name="registeredAt" type="date" defaultValue={member?.registeredAt ?? ''} style={inputStyle} />
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>목장</label>
-              <select name="cellGroupId" defaultValue={member?.cellGroupId ?? ''} className={inputCls} style={inputStyle}>
+          </div>
+
+          {/* 목장 + 상태 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={fieldStyle}>
+              <label style={labelStyle}>목장</label>
+              <select name="cellGroupId" defaultValue={member?.cellGroupId ?? ''} style={inputStyle}>
                 <option value="">미배정</option>
                 {cellGroups.map((cg) => (
                   <option key={cg.id} value={cg.id}>{cg.name}</option>
                 ))}
               </select>
             </div>
-            <div>
-              <label className={labelCls} style={labelStyle}>상태</label>
-              <select name="status" defaultValue={member?.status ?? 'active'} className={inputCls} style={inputStyle}>
+            <div style={fieldStyle}>
+              <label style={labelStyle}>상태</label>
+              <select name="status" defaultValue={member?.status ?? 'active'} style={inputStyle}>
                 <option value="active">활동</option>
                 <option value="inactive">비활동</option>
                 <option value="transferred">이전</option>
@@ -108,37 +149,44 @@ export default function MemberFormModal({
             </div>
           </div>
 
-          <div>
-            <label className={labelCls} style={labelStyle}>주소</label>
-            <input name="address" defaultValue={member?.address ?? ''} className={inputCls} style={inputStyle} />
+          {/* 주소 */}
+          <div style={fieldStyle}>
+            <label style={labelStyle}>주소</label>
+            <input name="address" defaultValue={member?.address ?? ''} style={inputStyle} placeholder="도로명 주소" />
           </div>
 
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input name="isBaptized" type="checkbox" defaultChecked={member?.isBaptized ?? false} />
+          {/* 세례 */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#1D1D1F', cursor: 'pointer', flexShrink: 0 }}>
+              <input name="isBaptized" type="checkbox" defaultChecked={member?.isBaptized ?? false}
+                style={{ width: 14, height: 14, accentColor: 'var(--color-primary)', cursor: 'pointer' }} />
               세례 여부
             </label>
-            <div className="flex-1">
-              <input name="baptizedAt" type="date" defaultValue={member?.baptizedAt ?? ''} className={inputCls} style={inputStyle} placeholder="세례일" />
+            <div style={{ flex: 1 }}>
+              <input name="baptizedAt" type="date" defaultValue={member?.baptizedAt ?? ''} style={inputStyle} />
             </div>
           </div>
 
-          <div>
-            <label className={labelCls} style={labelStyle}>메모</label>
-            <textarea name="notes" rows={2} defaultValue={member?.notes ?? ''} className={inputCls} style={inputStyle} />
+          {/* 메모 */}
+          <div style={fieldStyle}>
+            <label style={labelStyle}>메모</label>
+            <textarea name="notes" rows={2} defaultValue={member?.notes ?? ''} style={{ ...inputStyle, resize: 'vertical' }} />
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-lg text-sm border" style={{ borderColor: '#e2e8f0', color: '#64748b' }}>
+          {/* 버튼 */}
+          <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+            <button type="button" onClick={onClose} style={{
+              flex: 1, padding: '9px', borderRadius: 8, fontSize: 13,
+              background: '#F2F2F7', color: '#3A3A3C', border: 'none', cursor: 'pointer',
+            }}>
               취소
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 py-2 rounded-lg text-sm font-semibold text-white disabled:opacity-60"
-              style={{ background: 'var(--navy)' }}
-            >
-              {loading ? '저장 중...' : isEdit ? '수정' : '등록'}
+            <button type="submit" disabled={loading} style={{
+              flex: 1, padding: '9px', borderRadius: 8, fontSize: 13, fontWeight: 500,
+              background: 'var(--color-primary)', color: '#fff', border: 'none',
+              cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1,
+            }}>
+              {loading ? '저장 중…' : isEdit ? '수정' : '등록'}
             </button>
           </div>
         </form>

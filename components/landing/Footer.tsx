@@ -38,7 +38,12 @@ export default function Footer() {
             늘사랑교회
           </p>
           <p
-            style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.7 }}
+            style={{
+              fontSize: 13,
+              color: "rgba(255,255,255,0.5)",
+              margin: 0,
+              lineHeight: 1.7,
+            }}
           >
             예수 그리스도를 따르며
             <br />
@@ -73,9 +78,15 @@ export default function Footer() {
             {SERVICES.map(([name, time]) => (
               <li
                 key={name}
-                style={{ display: "flex", justifyContent: "space-between", gap: 16 }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 16,
+                }}
               >
-                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.65)" }}>{name}</span>
+                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.65)" }}>
+                  {name}
+                </span>
                 <span
                   style={{
                     fontSize: 13,
@@ -115,9 +126,15 @@ export default function Footer() {
             >
               서울특별시 영등포구 영등포로 130,
               <br />
-              진로아파트 상가동 3층
+              진로아파트 상가동 3층 (07292)
             </p>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", margin: 0 }}>
+            <p
+              style={{
+                fontSize: 13,
+                color: "rgba(255,255,255,0.4)",
+                margin: 0,
+              }}
+            >
               02-2637-5070
             </p>
           </div>
@@ -138,11 +155,18 @@ export default function Footer() {
             담임목사
           </p>
           <p
-            style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", margin: 0, lineHeight: 1.7 }}
+            style={{
+              fontSize: 13,
+              color: "rgba(255,255,255,0.65)",
+              margin: 0,
+              lineHeight: 1.7,
+            }}
           >
             담임목사 최진권
             <br />
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>neulsarang@church.or.kr</span>
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>
+              lordship_choi@msn.com
+            </span>
           </p>
         </div>
       </div>
