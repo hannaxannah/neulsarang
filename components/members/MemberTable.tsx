@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import type { getMembers, getCellGroups } from '@/lib/members'
 import MemberFormModal from './MemberFormModal'
 import { deleteMember } from '@/actions/members'
 
-type Member = Awaited<ReturnType<typeof getMembers>>[number]
+type Member = Awaited<ReturnType<typeof getMembers>>['rows'][number]
 type CellGroup = Awaited<ReturnType<typeof getCellGroups>>[number]
 
 const STATUS: Record<string, { label: string; color: string; bg: string }> = {
@@ -14,99 +15,143 @@ const STATUS: Record<string, { label: string; color: string; bg: string }> = {
   transferred: { label: '이전',   color: '#8A6400', bg: '#FFF3CD' },
 }
 
-const COLS = ['이름', '성별', '연락처', '목장', '상태', '세례', '']
+function formatDate(d: string | null) {
+  if (!d) return '–'
+  return d.slice(0, 10)
+}
 
-export default function MemberTable({ members, cellGroups }: { members: Member[]; cellGroups: CellGroup[] }) {
+type SortKey = 'name' | 'registeredAt' | 'cellGroup'
+
+export default function MemberTable({
+  members, cellGroups, sort,
+}: {
+  members: Member[]
+  cellGroups: CellGroup[]
+  sort: string
+}) {
+  const router = useRouter()
+  const sp = useSearchParams()
   const [editTarget, setEditTarget] = useState<Member | null>(null)
   const [showForm, setShowForm] = useState(false)
+
+  function handleSort(key: SortKey) {
+    const current = sort
+    const isAsc = current === `${key}_asc`
+    const next = isAsc ? `${key}_desc` : `${key}_asc`
+    const params = new URLSearchParams(sp.toString())
+    params.set('sort', next)
+    params.delete('page')
+    router.push(`/members?${params.toString()}`)
+  }
+
+  function getSortIcon(key: SortKey) {
+    if (sort === `${key}_asc`) return ' ▲'
+    if (sort === `${key}_desc`) return ' ▼'
+    return ''
+  }
 
   async function handleDelete(id: string, name: string) {
     if (!confirm(`${name} 성도를 삭제하시겠습니까?`)) return
     await deleteMember(id)
   }
 
+  const thBase: React.CSSProperties = {
+    textAlign: 'left', padding: '10px 16px',
+    fontSize: 11, fontWeight: 500, color: '#86868B',
+    letterSpacing: '0.04em', textTransform: 'uppercase',
+    background: '#FAFAFA',
+  }
+  const thSort: React.CSSProperties = { ...thBase, cursor: 'pointer', userSelect: 'none' }
+
   return (
     <>
-      <div className="members-table-scroll" style={{ background: '#FFFFFF', borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              {COLS.map((h) => (
-                <th key={h} style={{
-                  textAlign: 'left', padding: '10px 16px',
-                  fontSize: 11, fontWeight: 500, color: '#86868B',
-                  letterSpacing: '0.04em', textTransform: 'uppercase',
-                  background: '#FAFAFA',
-                }}>
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {members.length === 0 ? (
-              <tr>
-                <td colSpan={7} style={{ padding: '48px 16px', textAlign: 'center', color: '#C7C7CC', fontSize: 13 }}>
-                  등록된 성도가 없습니다.
-                </td>
+      <div style={{ background: '#FFFFFF', borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                <th style={thSort} onClick={() => handleSort('name')}>이름{getSortIcon('name')}</th>
+                <th style={thBase}>성별</th>
+                <th style={thBase}>생년월일</th>
+                <th style={thSort} onClick={() => handleSort('cellGroup')}>목장{getSortIcon('cellGroup')}</th>
+                <th style={thBase}>연락처</th>
+                <th style={thSort} onClick={() => handleSort('registeredAt')}>등록일{getSortIcon('registeredAt')}</th>
+                <th style={thBase}>상태</th>
+                <th style={thBase}>세례</th>
+                <th style={thBase} />
               </tr>
-            ) : members.map((m, i) => {
-              const s = STATUS[m.status ?? 'active'] ?? STATUS.active
-              return (
-                <tr
-                  key={m.id}
-                  style={{ borderBottom: i < members.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}
-                >
-                  <td style={{ padding: '11px 16px', fontWeight: 500, color: '#1D1D1F' }}>{m.name}</td>
-                  <td style={{ padding: '11px 16px', color: '#3A3A3C' }}>
-                    {m.gender === 'male' ? '남' : m.gender === 'female' ? '여' : '–'}
-                  </td>
-                  <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
-                    {m.phone ?? '–'}
-                  </td>
-                  <td style={{ padding: '11px 16px', color: '#3A3A3C' }}>{m.cellGroupName ?? '–'}</td>
-                  <td style={{ padding: '11px 16px' }}>
-                    <span style={{
-                      display: 'inline-flex', alignItems: 'center',
-                      padding: '2px 8px', borderRadius: 20,
-                      fontSize: 11, fontWeight: 500,
-                      color: s.color, background: s.bg,
-                    }}>
-                      {s.label}
-                    </span>
-                  </td>
-                  <td style={{ padding: '11px 16px', color: m.isBaptized ? '#1C8754' : '#C7C7CC' }}>
-                    {m.isBaptized
-                      ? <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-                      : '–'}
-                  </td>
-                  <td style={{ padding: '11px 16px' }}>
-                    <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
-                      <button
-                        onClick={() => { setEditTarget(m); setShowForm(true) }}
-                        style={{
-                          padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-                          background: '#F2F2F7', color: '#3A3A3C', border: 'none', cursor: 'pointer',
-                        }}
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDelete(m.id, m.name)}
-                        style={{
-                          padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-                          background: '#FFF2F2', color: '#FF3B30', border: 'none', cursor: 'pointer',
-                        }}
-                      >
-                        삭제
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {members.length === 0 ? (
+                <tr>
+                  <td colSpan={9} style={{ padding: '48px 16px', textAlign: 'center', color: '#C7C7CC', fontSize: 13 }}>
+                    등록된 성도가 없습니다.
                   </td>
                 </tr>
-              )
-            })}
-          </tbody>
-        </table>
+              ) : members.map((m, i) => {
+                const s = STATUS[m.status ?? 'active'] ?? STATUS.active
+                return (
+                  <tr
+                    key={m.id}
+                    onClick={() => router.push(`/members/${m.id}`)}
+                    style={{
+                      borderBottom: i < members.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#F9F9F9')}
+                    onMouseLeave={e => (e.currentTarget.style.background = '')}
+                  >
+                    <td style={{ padding: '11px 16px', fontWeight: 500, color: '#1D1D1F' }}>{m.name}</td>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C' }}>
+                      {m.gender === 'male' ? '남' : m.gender === 'female' ? '여' : '–'}
+                    </td>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
+                      {formatDate(m.birthDate)}
+                    </td>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C' }}>{m.cellGroupName ?? '–'}</td>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
+                      {m.phone ?? '–'}
+                    </td>
+                    <td style={{ padding: '11px 16px', color: '#3A3A3C', fontVariantNumeric: 'tabular-nums' }}>
+                      {formatDate(m.registeredAt)}
+                    </td>
+                    <td style={{ padding: '11px 16px' }}>
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center',
+                        padding: '2px 8px', borderRadius: 20,
+                        fontSize: 11, fontWeight: 500,
+                        color: s.color, background: s.bg,
+                      }}>{s.label}</span>
+                    </td>
+                    <td style={{ padding: '11px 16px', color: m.isBaptized ? '#1C8754' : '#C7C7CC' }}>
+                      {m.isBaptized
+                        ? <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                        : '–'}
+                    </td>
+                    <td style={{ padding: '11px 16px' }} onClick={e => e.stopPropagation()}>
+                      <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                        <button
+                          onClick={() => { setEditTarget(m); setShowForm(true) }}
+                          style={{
+                            padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                            background: '#F2F2F7', color: '#3A3A3C', border: 'none', cursor: 'pointer',
+                          }}
+                        >수정</button>
+                        <button
+                          onClick={() => handleDelete(m.id, m.name)}
+                          style={{
+                            padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                            background: '#FFF2F2', color: '#FF3B30', border: 'none', cursor: 'pointer',
+                          }}
+                        >삭제</button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {showForm && (

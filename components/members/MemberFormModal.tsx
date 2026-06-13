@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createMember, updateMember } from '@/actions/members'
 import type { getMembers, getCellGroups } from '@/lib/members'
 
-type Member = Awaited<ReturnType<typeof getMembers>>[number]
+type Member = Awaited<ReturnType<typeof getMembers>>['rows'][number]
 type CellGroup = Awaited<ReturnType<typeof getCellGroups>>[number]
 
 export default function MemberFormModal({
