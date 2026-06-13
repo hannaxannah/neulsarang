@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { getMembers, getCellGroups } from '@/lib/members'
 import MemberFormModal from './MemberFormModal'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 import { deleteMember } from '@/actions/members'
 
 type Member = Awaited<ReturnType<typeof getMembers>>['rows'][number]
@@ -33,6 +34,7 @@ export default function MemberTable({
   const sp = useSearchParams()
   const [editTarget, setEditTarget] = useState<Member | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null)
 
   function handleSort(key: SortKey) {
     const current = sort
@@ -50,9 +52,9 @@ export default function MemberTable({
     return ''
   }
 
-  async function handleDelete(id: string, name: string) {
-    if (!confirm(`${name} 성도를 삭제하시겠습니까?`)) return
+  async function handleDelete(id: string) {
     await deleteMember(id)
+    setPendingDelete(null)
   }
 
   const thBase: React.CSSProperties = {
@@ -138,7 +140,7 @@ export default function MemberTable({
                           }}
                         >수정</button>
                         <button
-                          onClick={() => handleDelete(m.id, m.name)}
+                          onClick={() => setPendingDelete({ id: m.id, name: m.name })}
                           style={{
                             padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
                             background: '#FFF2F2', color: '#FF3B30', border: 'none', cursor: 'pointer',
@@ -159,6 +161,16 @@ export default function MemberTable({
           member={editTarget}
           cellGroups={cellGroups}
           onClose={() => { setShowForm(false); setEditTarget(null) }}
+        />
+      )}
+      {pendingDelete && (
+        <ConfirmModal
+          title={`${pendingDelete.name} 성도를 삭제하시겠습니까?`}
+          description="삭제된 성도는 목록에서 제거되며 복구할 수 없습니다."
+          confirmLabel="삭제"
+          danger
+          onConfirm={() => handleDelete(pendingDelete.id)}
+          onCancel={() => setPendingDelete(null)}
         />
       )}
     </>

@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { createMember, updateMember } from '@/actions/members'
-import type { getMembers, getCellGroups } from '@/lib/members'
+import type { MemberRow, CellGroupRow } from '@/lib/members'
 
-type Member = Awaited<ReturnType<typeof getMembers>>['rows'][number]
-type CellGroup = Awaited<ReturnType<typeof getCellGroups>>[number]
+type Member = Pick<MemberRow, 'id' | 'name' | 'gender' | 'birthDate' | 'phone' | 'email' | 'address' | 'registeredAt' | 'isBaptized' | 'baptizedAt' | 'cellGroupId' | 'status' | 'notes'>
+type CellGroup = Pick<CellGroupRow, 'id' | 'name'>
 
 export default function MemberFormModal({
   member,

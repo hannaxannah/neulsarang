@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import { members, cellGroups } from '@/lib/db/schema'
+import { members, cellGroups, familyMembers, memberRelations } from '@/lib/db/schema'
 import { eq, isNull, ilike, or, sql, and, asc, desc } from 'drizzle-orm'
 import { PAGE_SIZE } from './members/constants'
 
@@ -110,6 +110,42 @@ export async function getMemberById(id: string) {
 
 export async function getCellGroups() {
   return db.select().from(cellGroups).where(eq(cellGroups.isActive, true)).orderBy(cellGroups.name)
+}
+
+export async function getFamilyMembers(memberId: string) {
+  return db.select().from(familyMembers)
+    .where(eq(familyMembers.memberId, memberId))
+    .orderBy(familyMembers.createdAt)
+}
+
+export async function getMemberRelations(memberId: string) {
+  const asA = await db.select({
+    id:           memberRelations.id,
+    relationType: memberRelations.relationType,
+    relatedId:    members.id,
+    relatedName:  members.name,
+    relatedGender: members.gender,
+    cellGroupName: cellGroups.name,
+  })
+  .from(memberRelations)
+  .innerJoin(members, eq(memberRelations.memberIdB, members.id))
+  .leftJoin(cellGroups, eq(members.cellGroupId, cellGroups.id))
+  .where(eq(memberRelations.memberIdA, memberId))
+
+  const asB = await db.select({
+    id:           memberRelations.id,
+    relationType: memberRelations.relationType,
+    relatedId:    members.id,
+    relatedName:  members.name,
+    relatedGender: members.gender,
+    cellGroupName: cellGroups.name,
+  })
+  .from(memberRelations)
+  .innerJoin(members, eq(memberRelations.memberIdA, members.id))
+  .leftJoin(cellGroups, eq(members.cellGroupId, cellGroups.id))
+  .where(eq(memberRelations.memberIdB, memberId))
+
+  return [...asA, ...asB]
 }
 
 export async function getMemberStats() {
