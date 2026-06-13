@@ -70,3 +70,7 @@ body {
   .members-header-row  { flex-direction: column !important; align-items: stretch !important; }
   .members-table-scroll { overflow-x: auto; }
 }
+
+/* ─── Utility ─── */
+.scroll-hide { scrollbar-width: none; }
+.scroll-hide::-webkit-scrollbar { display: none; }

@@ -13,7 +13,7 @@ const CARDS = [
     href: '/worship/attendance',
     label: '출석 입력',
     desc: '날짜·예배별 출석 체크인',
-    ready: false,
+    ready: true,
   },
   {
     href: '/worship/stats',
