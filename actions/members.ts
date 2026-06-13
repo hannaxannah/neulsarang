@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
 import { members } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { getMembersForExport, type MemberFilters } from '@/lib/members'
 
 export type MemberFormData = {
   name: string
@@ -66,6 +67,24 @@ export async function deleteMember(id: string) {
     .set({ deletedAt: new Date(), updatedAt: new Date() })
     .where(eq(members.id, id))
   revalidatePath('/members')
+}
+
+export async function exportMembersAction(filters: Omit<MemberFilters, 'page' | 'sort'>) {
+  const rows = await getMembersForExport(filters)
+  return rows.map(r => ({
+    name:          r.name,
+    gender:        r.gender === 'male' ? '남' : r.gender === 'female' ? '여' : '',
+    birthDate:     r.birthDate ?? '',
+    phone:         r.phone ?? '',
+    email:         r.email ?? '',
+    address:       r.address ?? '',
+    cellGroupName: r.cellGroupName ?? '',
+    registeredAt:  r.registeredAt ?? '',
+    isBaptized:    r.isBaptized ? 'O' : 'X',
+    baptizedAt:    r.baptizedAt ?? '',
+    status:        ({ active: '활동', inactive: '비활동', transferred: '이전' } as Record<string, string>)[r.status ?? ''] ?? '',
+    notes:         r.notes ?? '',
+  }))
 }
 
 export async function importMembersFromExcel(rows: MemberFormData[]) {

@@ -99,6 +99,54 @@ export async function getMembers(filters: MemberFilters = {}) {
   return { rows, total: countResult[0]?.count ?? 0 }
 }
 
+export async function getMembersForExport(filters: Omit<MemberFilters, 'page' | 'sort'> = {}) {
+  const { search, cellGroupId, gender, ageGroup, year, status } = filters
+  const currentYear = new Date().getFullYear()
+
+  const ageFilter = ageGroup && AGE_RANGES[ageGroup]
+    ? and(
+        sql`${members.birthDate} IS NOT NULL`,
+        sql`EXTRACT(YEAR FROM ${members.birthDate}::date) BETWEEN ${currentYear - AGE_RANGES[ageGroup][1]} AND ${currentYear - AGE_RANGES[ageGroup][0]}`,
+      )
+    : undefined
+
+  const yearFilter = year
+    ? and(
+        sql`${members.registeredAt} IS NOT NULL`,
+        sql`EXTRACT(YEAR FROM ${members.registeredAt}::date) = ${parseInt(year)}`,
+      )
+    : undefined
+
+  const whereClause = and(
+    isNull(members.deletedAt),
+    search ? or(ilike(members.name, `%${search}%`), ilike(members.phone, `%${search}%`)) : undefined,
+    cellGroupId ? eq(members.cellGroupId, cellGroupId) : undefined,
+    gender ? eq(members.gender, gender) : undefined,
+    status ? eq(members.status, status) : undefined,
+    ageFilter,
+    yearFilter,
+  )
+
+  return db.select({
+    name:          members.name,
+    gender:        members.gender,
+    birthDate:     members.birthDate,
+    phone:         members.phone,
+    email:         members.email,
+    address:       members.address,
+    cellGroupName: cellGroups.name,
+    registeredAt:  members.registeredAt,
+    isBaptized:    members.isBaptized,
+    baptizedAt:    members.baptizedAt,
+    status:        members.status,
+    notes:         members.notes,
+  })
+    .from(members)
+    .leftJoin(cellGroups, eq(members.cellGroupId, cellGroups.id))
+    .where(whereClause)
+    .orderBy(asc(members.name))
+}
+
 export async function getMemberById(id: string) {
   const [row] = await db
     .select()

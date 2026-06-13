@@ -1,9 +1,9 @@
 import { getMembers, getCellGroups, getMemberStats } from '@/lib/members'
 import { PAGE_SIZE } from '@/lib/members/constants'
 import MemberTable from '@/components/members/MemberTable'
-import ExcelImport from '@/components/members/ExcelImport'
 import MembersHeader from '@/components/members/MembersHeader'
 import MemberPagination from '@/components/members/MemberPagination'
+import MembersExcelButton from '@/components/members/MembersExcelButton'
 import PageContainer from '@/components/dashboard/PageContainer'
 
 export default async function MembersPage({
@@ -55,7 +55,7 @@ export default async function MembersPage({
             세례 {stats?.baptized ?? 0}명
           </p>
         </div>
-        <ExcelImport />
+        <MembersExcelButton />
       </div>
 
       <MembersHeader cellGroups={cellGroups} />
